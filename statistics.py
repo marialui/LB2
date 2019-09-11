@@ -3,10 +3,11 @@ import sys
 import matplotlib.pyplot as plt
 import matplotlib.mlab as mlab
 import numpy as np
+import pandas as pd
 
 lista = ['percentage of coil', 'percentage of strends', 'percentage of helixes']
 # this will take as an input 2 files: the first one with all the ss , the second is a fasta file
-# and the third is an empty file where to merge for each id the secondary structure and the fasta
+# and will return a merged file where for each id the secondary structure and the fasta is reported
 
 def merger(f1, f2):
     l1 = f1.readlines()
@@ -38,6 +39,7 @@ def ss_percentage(set):
     file=[]
     ss=[]
     fasta=[]
+    id=[]
     counts = {}
     residuepercentage={}
 
@@ -45,6 +47,7 @@ def ss_percentage(set):
         line=line.rstrip()
         if line[0]!='>':
             file.append(line)
+        else:id.append(line[1:])
     for j in range (0,len(file),2):
         ss.append(file[j])
         if j!= 0:
@@ -62,7 +65,7 @@ def ss_percentage(set):
             elif i == '-':
                 c = c + 1
                 t = t + 1
-
+    #print(id)
     #fasta.append(file[len(file) - 1])
     coil = (float(c / t) * 100)
     helix = (float(h / t) * 100)
@@ -108,15 +111,15 @@ def ss_percentage(set):
             residuepercentage[aa][s]= round(float (residuepercentage[aa][s]/strutturesecondarie[s])*100,2)
             #print(residuepercentage[aa][s],strutturesecondarie[s])
 
-    print('here is the relative composition:',
-          residuepercentage)  # this prints a dictionary where for each ss we have associated the corrispective number of residue
+    print('here is the relative composition:',residuepercentage)  # this prints a dictionary where for each ss we have associated the corrispective number of residue
     # prensent in that ss.
     return ([coil, strand, helix],residuepercentage)
 
 
 
 
-def printpie(a, b):
+def printpie(a):
+    b = ['percentage of coil', 'percentage of strends', 'percentage of helixes']
     fig, ax = plt.subplots(figsize=(6, 3), subplot_kw=dict(aspect="equal"))
     wedges, texts = ax.pie(a, wedgeprops=dict(width=0.5), startangle=-40)
 
@@ -147,16 +150,40 @@ def print_histogram(data):
 
     plt.show()
 
+
+#we took the pdb ids and with the advance search in pdb we retrieved
+#the number of ids for each kindom and we plot the result
+def kindom_pie(listk):
+    tot = sum(listk)
+    for i in range(len(listk)):
+        listk[i]=round(float((listk[i]/tot))*100,1)
+    #print(listk,kindo)
+
+    # Pie chart, where the slices will be ordered and plotted counter-clockwise:
+    labels = 'Bacteria','Eukaryota','Archaea','Viruses','Other'
+    sizes = listk
+    explode = (0, 0, 0, 0.4,0.7)  # only "explode" the 2nd slice (i.e. 'Hogs')
+
+    fig1, ax1 = plt.subplots()
+    ax1.pie(sizes, explode=explode, labels=labels, autopct='%1.1f%%',
+            shadow=True, startangle=90)
+    ax1.axis('equal')  # Equal aspect ratio ensures that pie is drawn as a circle.
+
+    plt.show()
+
+
 if __name__ == "__main__":
     ss = open(sys.argv[1], "r")
     fasta = open(sys.argv[2], "r")
     data = open(sys.argv[3], "w+")
 
     set = merger(ss, fasta)
-
-    l = (ss_percentage(data)[0])
+    m=ss_percentage(data)
+    l = (m[0])
     print(l)
-    printpie(l, lista)
-    residui=(ss_percentage(data)[1])
+    printpie(l)
+    residui=(m[1])
     print(residui)
     print_histogram(residui)
+    listak = [639, 455, 93, 63, 2]
+    kindom_pie(listak)
