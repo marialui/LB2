@@ -7,7 +7,7 @@ def get_list_fasta(lid,fasta):
     for line in f:
         line=line.rstrip()
         if line[0]=='>':
-            tid=line.split(' ')[0][1:]
+            tid=line.split('|')[0][1:]
 
         if lid.get(tid,False)==1:
             #you go here only if the statement is true and so c=1 and it will print the value
