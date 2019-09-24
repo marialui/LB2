@@ -80,6 +80,26 @@ print(Fasta)
 
 #here we store in file representatives.fasta all the ids of all the representatives
 #and the corrispondent sequence in fasta format
+
 f6=open('representatives.fasta','w')
+
 for L in range(len(Fasta['Name'])):
-    f6.write('>' + (Fasta['Name'].iloc[L]).lower()+ '\n'+ Fasta['Sequence'].iloc[L] + '\n' )
+    f6.write('>' + (Fasta['Name'].iloc[L]).upper()+ '\n'+ Fasta['Sequence'].iloc[L] + '\n' )
+
+
+f7=open('reducedblidset','w+')
+f9=open('reducedblidset.fasta','w+')
+
+#here we produce a file where we store all the representatives ids without the 473 ids from removeids file
+#and we produce also a multifasta file with all the sequences for each chain (reducedblindset.fasta)
+
+for L in range(len(Fasta['Name'])):
+    with open('removeids.txt') as f8:
+        if ((Fasta['Name'].iloc[L]).upper()) not in f8.read():
+            f7.write((Fasta['Name'].iloc[L]).upper()+ '\n' )
+            f9.write(('>' + Fasta['Name'].iloc[L]).upper() + '\n' + Fasta['Sequence'].iloc[L] + '\n')
+
+
+
+
+
