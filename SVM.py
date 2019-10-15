@@ -53,29 +53,19 @@ def svm_training(pathprofile, pathdssp):
 
 
                 profile = df.iloc[i - 8:i + 9].to_numpy()
-                print('profile is >>>', profile)
+
                 for e in range (len(profile)):
                     for element in profile[e]:
                         l.append(element)
                 for j in l:
                     if j != 0:
                         row.append('%d:%f'%(int(l.index(j))+1,float(j)))
-                print(row)
+
                 s = " ".join(row)
 
                 outputfile.write('%s\n'%(s))
                 l = []
-                row = []
-
-
-
-                    #row.append('%s:%s'%(l.index(element),element))
-                    #print('row is :>>>>', row)
-                l=[]
-                #row=[]
-               # print(row)
-
-                #profile is the windw of 17 rows and 20 columns
+    outputfile.close()
 
 
 
@@ -86,8 +76,8 @@ if __name__ == "__main__":
     pathdssp = sys.argv[2]
 
 
-    matrici = svm_training(pathprofile, pathdssp)
-    print(matrici)
+    inputtraining = svm_training(pathprofile, pathdssp)
+
 
 
 
