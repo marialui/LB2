@@ -4,17 +4,22 @@ import sys
 import re
 import numpy as np
 
-d = {'E': 'E', 'H': 'H', '-': 'C', 'C':'C'}
+lista=['H','C','E']
 def SOV(observed, predicted):
+    num = 0
+    totalsov = 0
     for item in os.listdir(observed):
+
         if '%s' % (item.split('.')[1]) == 'dssp':
             stuff = '%s' % (item.split('.')[0]) + '.DSSP'
             pred = open('%s/%s' % (predicted, stuff), 'r')
             obs = open('%s/%s' % (observed,item), 'r')
-            #P = pred.readlines()[1]
-            #O=obs.readlines()[1]
-            O='CCCHHHHHCCCCCCCCHHHHHHHHHHCCC'
-            P='CCCCCCCCCCCHHHHHHHCCCCCHHHHCC'
+
+            P = pred.readlines()[1]
+            O=obs.readlines()[1]
+
+            #O='CCCHHHHHCCCCCCCCHHHHHHHHHHCCC'
+            #P='CCCCCCCCCCCHHHHHHHCCCCCHHHHCC'
 
             LISTAP=[]
             LISTAO=[]
@@ -43,7 +48,16 @@ def SOV(observed, predicted):
                         sommatoria.append(value)
 
             sov= SOVh*(sum(sommatoria))
-            return(sov)
+
+            if sov !=0:
+                num=num +1
+            totalsov=totalsov+sov
+            average=totalsov / num
+
+
+
+
+    return(average)
 
 if __name__ == "__main__":
     pathobserveddssp = sys.argv[1]
